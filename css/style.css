@@ -23,11 +23,45 @@ form {
     display: flex;
     flex-flow: column nowrap;
     margin: auto;
+    margin: 10px 0; 
     justify-content: center;
 }
 
 .searchBar input{
-    width: 95%;
+    width: 93%;
+    height: 50px;
+    background: #E7E7E7;
+    border-radius: 5px;
+    padding-right: 50px;
+    padding-left: 30px;
+    border: transparent;
+}
+
+.searchBar input::placeholder{
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+
+    color: #000000;
+    opacity: 0.25;
+}
+
+.searchBar button {
+    position: absolute;
+    top: 170px;
+    right: 70px;
+    transform: translateY(-50%);
+    width: 33px;
+    height: 33px;
+    background-color: transparent;
+    border: none;
+}
+
+.searchBar button i {
+    font-size: 30px;
+    cursor: pointer;
 }
 
 nav form div select {
@@ -41,23 +75,34 @@ nav form div select {
 }
 
 /* Recettes filtrées */
+main {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 10px;
+}
+
 figure {
-    border: 3px solid red;
-    width: 25%;
-    height: 16em;
+    width: 380px;
+    height: 365px;
+    background: #E7E7E7;
+    border-radius: 5px;
+    margin: 10px 0px;
 }
 
 figure img {
     object-fit: cover;
     width: 100%;
-    height: 40%;
+    height: 150px;
 }
 
 figcaption {
+    height: 185px;
     display: grid;
     grid-template-columns: auto auto;
     grid-template-rows: auto auto;
     grid-gap: 10px; /* Espacement entre les cellules de la grille */
+    padding: 20px;
+    padding-top: 0;
 }
 
 figcaption h2 {
@@ -69,24 +114,32 @@ figcaption h2 {
     color: #000000;
 }
 
-figcaption p .ingredients{
+.time {
+    text-align: right;
+    margin-right: 30px;
+}
+
+.ingredients{
     font-family: 'Lato';
     font-style: normal;
-    font-weight: 700;
+    font-weight: 400;
     font-size: 12px;
     line-height: 14px;
-
     color: #000000;
 }
 
-figcaption p .description {
+.ingredients strong {
+    font-weight: 700;
+}
+
+.description {
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
     line-height: 100%;
-    /* or 12px */
-
-
     color: #000000;
+    
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
