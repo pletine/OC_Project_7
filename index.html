@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <link href="css/style.css" rel="stylesheet" type="text/css">
+        <meta charset="utf-8">
+        <link rel="icon" type="image/png" href="assets/logo.png">
+        <title>Petits plats</title>
+        <script src="https://kit.fontawesome.com/cb7e953be4.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <header>
+            <img src="assets/logo.svg" alt="Logo du site">
+            <h1>Les petits plats</h1>
+        </header>
+        <nav>
+            <form action="" name="search">
+                <div class="searchBar">
+                    <input type="text" placeholder="Search.." name="search">
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                </div>
+
+                <div class="activeFilter"></div>
+
+                <div class="filter">
+                    <select name="ingredients" id="ingr-select" form="search">
+                        <option value="">--Ingrédients--</option>
+                        <option value="test1">Test 1</option>
+                    </select>
+                    <select name="appareils" id="app-select" form="search">
+                        <option value="">--Appareils--</option>
+                        <option value="test2">Test 2</option>
+                    </select>
+                    <select name="ustensils" id="ust-select" form="search">
+                        <option value="">--Ustensils--</option>
+                        <option value="test3">Test 3</option>
+                    </select>
+                </div>
+            </form>
+        </nav>
+        <main>
+            <figure>
+                <img src="assets/recipeDefaultImage.png" alt="Photo de la recette">
+                <figcaption>
+                    <h2>Limonade de Coco</h2>
+                    <p class="time"><i class="fa-regular fa-clock"></i> 10 min</p>
+                    <p class="ingredients">
+                        Lait de coco: 400 ml <br>
+                        Jus de citron: 2 <br>
+                        Crème de coco: 2 cuillères à soupe <br>
+                        Sucre: 30 grammes <br>
+                        Glaçons
+                    </p>
+                    <p class="description">
+                        Mettre les glaçons à votre goût dans le blender, 
+                        ajouter le lait, la crème de coco, le jus de 2 citrons 
+                        et le sucre. Mixer jusqu'à avoir la consistence désirée
+                    </p>
+                </figcaption>
+            </figure>
+        </main>
+    </body>
+
+    <script>
+        console.log('Bonjour');
+    </script>
+    <script src="data/recipes.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/factories/RecipesFactory.js"></script>
+</html>

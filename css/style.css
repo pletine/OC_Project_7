@@ -1,0 +1,92 @@
+body {
+    max-width: 1400px;
+    margin: 20px 50px;
+}
+
+header {
+    text-align: center;
+    margin-top: 40px;
+}
+
+h1 {
+    font-family: 'DM Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 36px;
+
+    color: #D04F4F;
+    margin: 0;
+}
+
+/* Formulaire de recherche */
+form {
+    display: flex;
+    flex-flow: column nowrap;
+    margin: auto;
+    justify-content: center;
+}
+
+.searchBar input{
+    width: 95%;
+}
+
+nav form div select {
+    width: 20%;
+}
+
+.activeFilter p {
+    border-radius: 25px;
+    padding: 2%;
+    background-color: blue;
+}
+
+/* Recettes filtrées */
+figure {
+    border: 3px solid red;
+    width: 25%;
+    height: 16em;
+}
+
+figure img {
+    object-fit: cover;
+    width: 100%;
+    height: 40%;
+}
+
+figcaption {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    grid-gap: 10px; /* Espacement entre les cellules de la grille */
+}
+
+figcaption h2 {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    color: #000000;
+}
+
+figcaption p .ingredients{
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 14px;
+
+    color: #000000;
+}
+
+figcaption p .description {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 100%;
+    /* or 12px */
+
+
+    color: #000000;
+}
