@@ -13,34 +13,19 @@
             <h1>Les petits plats</h1>
         </header>
         <nav>
-            <form action="" name="search">
-                <div class="searchBar">
-                    <input type="text" placeholder="Search.." name="search">
-                    <button type="submit"><i class="fa fa-search"></i></button>
-                </div>
-
-                <div class="activeFilter"></div>
-
-                <div class="filter">
-                    <select name="ingredients" id="ingr-select" form="search">
-                        <option value="">--Ingrédients--</option>
-                        <option value="test1">Test 1</option>
-                    </select>
-                    <select name="appareils" id="app-select" form="search">
-                        <option value="">--Appareils--</option>
-                        <option value="test2">Test 2</option>
-                    </select>
-                    <select name="ustensils" id="ust-select" form="search">
-                        <option value="">--Ustensils--</option>
-                        <option value="test3">Test 3</option>
-                    </select>
-                </div>
+            <form action="" name="search" class="searchBar">
+                <input type="text" placeholder="Rechercher un recette" name="search">
+                <button type="submit"><i class="fa fa-search"></i></button>
             </form>
+            <div class="activeFilters"></div>
+            <div class="filters"></div>
         </nav>
         <main></main>
     </body>
 
     <script src="data/recipes.js"></script>
     <script src="scripts/factories/RecipesFactory.js"></script>
+    <script src="scripts/class/ActiveFilter.js"></script>
+    <script src="scripts/class/Filter.js"></script>
     <script src="scripts/main.js"></script>
 </html>

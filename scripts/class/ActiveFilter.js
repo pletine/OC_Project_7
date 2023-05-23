@@ -1,0 +1,9 @@
+class ActiveFilter {
+    constructor() {
+
+    }
+
+    create() {
+        
+    }
+}

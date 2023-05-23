@@ -1,0 +1,38 @@
+/* Filters */
+nav .filters {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+nav .filters > div {
+    border-radius: 5px;
+    border: transparent;
+    margin: 1em;
+    padding: 20px;
+
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    /* identical to box height */
+    text-align: left;
+
+    color: #FFFFFF;
+}
+
+nav .filters ol {
+    list-style-type: none;
+}
+
+nav .filters li::first-letter {
+    text-transform: uppercase;
+}
+
+/* Filtres actifs */
+.activeFilters p {
+    border-radius: 25px;
+    padding: 2%;
+    background-color: grey;
+    color: white;
+}
