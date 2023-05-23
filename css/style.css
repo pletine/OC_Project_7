@@ -23,6 +23,8 @@ h1 {
 
 /* Formulaire de recherche */
 form {
+    width: 100%;
+    
     display: flex;
     flex-flow: column nowrap;
     margin: auto;
@@ -30,8 +32,7 @@ form {
     justify-content: center;
 }
 
-.searchBar input{
-    width: 93%;
+.mainSearchBar input{
     height: 50px;
     background: #E7E7E7;
     border-radius: 5px;
@@ -40,7 +41,7 @@ form {
     border: transparent;
 }
 
-.searchBar input::placeholder{
+.mainSearchBar input::placeholder{
     font-family: 'Lato';
     font-style: normal;
     font-weight: 400;
@@ -51,7 +52,7 @@ form {
     opacity: 0.25;
 }
 
-.searchBar button {
+.mainSearchBar button {
     position: absolute;
     top: 170px;
     right: 70px;
@@ -62,7 +63,7 @@ form {
     border: none;
 }
 
-.searchBar button i {
+.mainSearchBar button i {
     font-size: 30px;
     cursor: pointer;
 }

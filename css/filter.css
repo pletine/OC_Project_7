@@ -1,13 +1,62 @@
-/* Filters */
-nav .filters {
+/* Filtres actifs */
+.activeFilters {
+    width: 100%;
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: row wrap;
 }
 
-nav .filters > div {
+.activeFilters div {
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 30px;
+    color: white;
+
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+.activeFilters p {
+    padding-right: 20px;
+}
+
+/* Filters */
+nav {
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+div[id $= 'filter'] {
+    font-family: 'Lato';
+    font-style: normal;
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: left;
+
     border-radius: 5px;
     border: transparent;
     margin: 1em;
+    padding: 10px 20px;
+    width: 15%;
+    height: 60px;
+
+    z-index: 10;
+}
+
+.searchBar {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.searchBar input {
+    background-color: transparent;
+    border: transparent;
+    border-radius: 5px;
     padding: 20px;
 
     font-family: 'Lato';
@@ -15,24 +64,19 @@ nav .filters > div {
     font-weight: 700;
     font-size: 18px;
     line-height: 22px;
-    /* identical to box height */
     text-align: left;
 
     color: #FFFFFF;
 }
 
-nav .filters ol {
+div[id $= 'filter'] ol {
     list-style-type: none;
+    display: flex;
+    flex-flow: row wrap;
 }
 
-nav .filters li::first-letter {
+div[id $= 'filter'] li::first-letter {
     text-transform: uppercase;
 }
 
-/* Filtres actifs */
-.activeFilters p {
-    border-radius: 25px;
-    padding: 2%;
-    background-color: grey;
-    color: white;
-}
+

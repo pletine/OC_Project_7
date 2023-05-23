@@ -65,22 +65,39 @@ class Filter {
                 this.open();
             }
         });
+
+        filterTitle.addEventListener('click', () => {
+            this.open();
+            filterInput.focus();
+        })
     }
 
     update(listFilters) {
-
+        let listItems = this.filterContent.querySelector('ol');
+        listItems.innerHTML = ``;
+        this.listFilters.forEach(element => {
+            let option = document.createElement('li');
+            option.innerText = element;
+            listItems.append(option);
+        });
     }
 
     open() {
-        this.filterContent.querySelector('.searchBar img').style.transform = 'rotation(180deg)';
+        this.filterContent.querySelector('.searchBar img').style.transform = 'rotate(180deg)';
         this.transformSearchBar(true);
         this.status = true;
+        this.filterContent.querySelector('ol').style.display = 'block';
+        this.filterContent.style.height = '500px';
+        this.filterContent.style.width = '500px';
     }
 
     close() {
-        this.filterContent.querySelector('.searchBar img').style.transform = 'rotation(0deg)';
+        this.filterContent.querySelector('.searchBar img').style.transform = 'rotate(0deg)';
         this.transformSearchBar(false);
         this.status = false;
+        this.filterContent.querySelector('ol').style.display = 'none';
+        this.filterContent.style.height = '60px';
+        this.filterContent.style.width = '15%';
     }
 
     transformSearchBar(statusAsked) {
@@ -91,6 +108,7 @@ class Filter {
         } else { // Show the title and not the search
             div.childNodes[0].style.display = 'block';
             div.childNodes[1].style.display = 'none';
+            div.querySelector('input').value = '';
         }
     }
 }
