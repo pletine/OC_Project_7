@@ -62,9 +62,17 @@ class Filter {
             }
         });
 
+        /* Faire le focus sur la barre de recherche lors de l'ouverture du menu */
         filterTitle.addEventListener('click', () => {
             this.open();
             filterInput.focus();
+        });
+
+        /* Fermer le filtre lors du clic à l'extérieur */
+        document.addEventListener('mouseup', (event) => {
+            if(!this.filterContent.contains(event.target)) {
+                this.close();
+            }
         })
     }
 
@@ -81,36 +89,44 @@ class Filter {
             });
             this.filterList.append(option);
         });
+        console.log(listFilters)
     }
-
+    
     open() {
+        /* Fix the position of the main */
+        let mainHTMLDiv = document.querySelector('main');
+        mainHTMLDiv.style.position = 'absolute';
+        mainHTMLDiv.style.top = mainHTMLDiv.offsetTop.toString() + 'px';
+
+        /* Modify the search part of the menu */
+        let div = this.filterDiv.querySelector('.searchBar');
         this.filterContent.querySelector('.searchBar img').style.transform = 'rotate(180deg)';
-        this.transformSearchBar(true);
+        div.childNodes[0].style.display = 'none';
+        div.childNodes[1].style.display = 'block';
         this.status = true;
-        this.filterContent.querySelector('ol').style.display = 'block';
+
+        /* Show the choices of the filter menu */
+        this.filterContent.querySelector('ol').style.display = 'grid';
+        this.filterContent.querySelector('ol').style.gridTemplateColumns = "auto auto auto";
         this.filterContent.style.height = 'auto';
         this.filterContent.style.width = 'auto';
     }
 
     close() {
+        /* Give again the position of the main part */
+        let mainHTMLDiv = document.querySelector('main');
+        mainHTMLDiv.style.position = 'unset';
+        mainHTMLDiv.style.top = 'none';
+
+        let div = this.filterDiv.querySelector('.searchBar');
         this.filterContent.querySelector('.searchBar img').style.transform = 'rotate(0deg)';
-        this.transformSearchBar(false);
+        div.childNodes[0].style.display = 'block';
+        div.childNodes[1].style.display = 'none';
+        div.querySelector('input').value = '';
         this.status = false;
         this.filterContent.querySelector('ol').style.display = 'none';
         this.filterContent.style.height = '60px';
         this.filterContent.style.width = '15%';
-    }
-
-    transformSearchBar(statusAsked) {
-        let div = this.filterDiv.querySelector('.searchBar');        
-        if(statusAsked) { // Show the search and not the title
-            div.childNodes[0].style.display = 'none';
-            div.childNodes[1].style.display = 'block';
-        } else { // Show the title and not the search
-            div.childNodes[0].style.display = 'block';
-            div.childNodes[1].style.display = 'none';
-            div.querySelector('input').value = '';
-        }
     }
 
     addActiveFilter(nameFilter) {

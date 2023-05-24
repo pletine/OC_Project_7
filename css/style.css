@@ -21,6 +21,17 @@ h1 {
     margin: 0;
 }
 
+.noResult {
+    font-size: xx-large;
+    font-weight: 700;
+    margin-left: 2em;
+}
+
+.noResult i {
+    font-size: x-large;
+    font-weight: 400;
+}
+
 /* Formulaire de recherche */
 form {
     width: 100%;
