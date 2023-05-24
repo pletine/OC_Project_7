@@ -4,11 +4,11 @@ class Filter {
         this.listFilters = listFilters;
         this.backgroundColor = backgroundColor;
         this.status = false; // true - open, false - close
+
+        this.activeFilters = [];
         
         this.filterContent = this.initHTML();
         this.initEventListener();
-
-        return this.filterContent;
     }
 
     initHTML() {
@@ -40,14 +40,10 @@ class Filter {
         this.filterDiv.append(filterTitle);
 
         // Create the list in the menu
-        let filterList = document.createElement('ol');
-        this.listFilters.forEach(element => {
-            let option = document.createElement('li');
-            option.innerText = element;
-            filterList.append(option);
-        });
-        filterList.style.display = 'none';
-        this.filterDiv.append(filterList);
+        this.filterList = document.createElement('ol');
+        this.update(this.listFilters);
+        this.filterList.style.display = 'none';
+        this.filterDiv.append(this.filterList);
 
         return this.filterDiv;
     }
@@ -73,12 +69,17 @@ class Filter {
     }
 
     update(listFilters) {
-        let listItems = this.filterContent.querySelector('ol');
-        listItems.innerHTML = ``;
-        this.listFilters.forEach(element => {
+        this.filterList.innerHTML = ``;
+        listFilters.forEach(element => {
             let option = document.createElement('li');
             option.innerText = element;
-            listItems.append(option);
+            option.class = this.name.substring(0, 3);
+            option.addEventListener('click', () => {
+                if(this.status) {
+                    this.addActiveFilter(element);
+                }
+            });
+            this.filterList.append(option);
         });
     }
 
@@ -87,8 +88,8 @@ class Filter {
         this.transformSearchBar(true);
         this.status = true;
         this.filterContent.querySelector('ol').style.display = 'block';
-        this.filterContent.style.height = '500px';
-        this.filterContent.style.width = '500px';
+        this.filterContent.style.height = 'auto';
+        this.filterContent.style.width = 'auto';
     }
 
     close() {
@@ -110,5 +111,31 @@ class Filter {
             div.childNodes[1].style.display = 'none';
             div.querySelector('input').value = '';
         }
+    }
+
+    addActiveFilter(nameFilter) {
+        if(!this.activeFilters.includes(nameFilter)) {
+            let divActiveFilters = document.querySelector('.activeFilters');
+            let filterIndex = this.activeFilters.push(nameFilter) - 1;
+
+            let div = document.createElement('div');
+            div.innerHTML = `
+                <p>${nameFilter}</p>
+                <img 
+                    src='assets/closeActiveFilter.svg' 
+                    alt='Supprimer ce filtre'>
+            `
+            div.style.backgroundColor = this.backgroundColor;
+            divActiveFilters.append(div);
+
+            div.querySelector('img').addEventListener('click', ()=> {
+                this.removeActiveFilter(div, filterIndex);
+            })
+        }
+    }
+    
+    removeActiveFilter(divActiveFilter, filterIndex) {
+        this.activeFilters.splice(filterIndex, 1);
+        divActiveFilter.remove();
     }
 }

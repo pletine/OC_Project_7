@@ -1,5 +1,4 @@
 const main = document.querySelector('main');
-const activeFilters = document.querySelector('.activeFilters');
 const nav = document.querySelector('nav');
 
 // Get lists of data needed
@@ -25,36 +24,30 @@ recipes.forEach((elem) => {
     });
 });
 
-// Create Active Filters list
-let listActiveFilters = {
-    'ingr' : [],
-    'app' : [],
-    'ust' : []
-}
-
-listActiveFilters['ingr'].push('Ingr 1');
-listActiveFilters['ingr'].push('Ingr 2');
-listActiveFilters['app'].push('app 1');
-listActiveFilters['ust'].push('ust 1');
-
-for (const [key, value] of Object.entries(listActiveFilters)) {
-    value.forEach((elem) => {
-        activeFilters.append(new ActiveFilter(key, elem))
-    })
-}
-
 // Create Filter Menus
 let menuIngredients = new Filter('Ingrédients', listIngredients, '#3282F7');
-nav.append(menuIngredients);
+nav.append(menuIngredients.filterContent);
 
 let menuAppareils = new Filter('Appareils', listAppareils, '#68D9A4');
-nav.append(menuAppareils);
+nav.append(menuAppareils.filterContent);
 
 let menuUstensils = new Filter('Ustensils', listUstensils, '#ED6454');
-nav.append(menuUstensils);
+nav.append(menuUstensils.filterContent);
 
 // Create Receipes
 recipes.forEach(recipe => {
     main.appendChild(RecipesFactory.create(recipe));
 });
 
+// Global event listener
+document.addEventListener('mouseup', (event) => {
+    if(!menuIngredients.filterContent.contains(event.target)) {
+        menuIngredients.close();
+    }
+    if(!menuAppareils.filterContent.contains(event.target)) {
+        menuAppareils.close();
+    }
+    if(!menuUstensils.filterContent.contains(event.target)) {
+        menuUstensils.close();
+    }
+})
