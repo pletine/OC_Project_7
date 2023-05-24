@@ -132,10 +132,14 @@ class Filter {
                 this.removeActiveFilter(div, filterIndex);
             })
         }
+        const changeEvent = new CustomEvent('filtersChange');
+        window.dispatchEvent(changeEvent);
     }
-    
+
     removeActiveFilter(divActiveFilter, filterIndex) {
         this.activeFilters.splice(filterIndex, 1);
         divActiveFilter.remove();
+        const changeEvent = new CustomEvent('filtersChange');
+        window.dispatchEvent(changeEvent);
     }
 }

@@ -1,5 +1,12 @@
-const main = document.querySelector('main');
 const nav = document.querySelector('nav');
+
+function createHTMLListRecipes(listRecipes) {
+    const main = document.querySelector('main');
+    main.innerHTML = ``;
+    listRecipes.forEach(recipe => {
+        main.appendChild(RecipesFactory.create(recipe));
+    });
+}
 
 // Get lists of data needed
 let listIngredients = [];
@@ -35,9 +42,7 @@ let menuUstensils = new Filter('Ustensils', listUstensils, '#ED6454');
 nav.append(menuUstensils.filterContent);
 
 // Create Receipes
-recipes.forEach(recipe => {
-    main.appendChild(RecipesFactory.create(recipe));
-});
+createHTMLListRecipes(recipes);
 
 // Global event listener
 document.addEventListener('mouseup', (event) => {
@@ -50,4 +55,26 @@ document.addEventListener('mouseup', (event) => {
     if(!menuUstensils.filterContent.contains(event.target)) {
         menuUstensils.close();
     }
+})
+
+window.addEventListener('filtersChange', () => {
+    let recipesFiltered = recipes;
+    menuIngredients.activeFilters.forEach((filter) => {
+        recipesFiltered = recipesFiltered.filter(recipe =>
+            recipe.ingredients.find(elem =>
+                elem.ingredient.includes(filter)
+            )
+        )
+    })
+    menuAppareils.activeFilters.forEach((filter) => {
+        recipesFiltered = recipesFiltered.filter(recipe =>
+            recipe.appliance === filter
+        )
+    })
+    menuUstensils.activeFilters.forEach((filter) => {
+        recipesFiltered = recipesFiltered.filter(recipe =>
+            recipe.ustensils.includes(filter)
+        )
+    })
+    createHTMLListRecipes(recipesFiltered);
 })
