@@ -1,17 +1,17 @@
-class Filter {
-    constructor(name, listFilters, backgroundColor)  {
+class TagMenu {
+    constructor(name, listFilters, backgroundColor) {
         this.name = name;
         this.listFilters = listFilters;
         this.backgroundColor = backgroundColor;
         this.status = false; // true - open, false - close
 
         this.activeFilters = [];
-        
-        this.filterContent = this.initHTML();
+
+        this.filterContent = this.createHTML();
         this.initEventListener();
     }
 
-    initHTML() {
+    createHTML() {
         // Create the global div of the filter
         this.filterDiv = document.createElement('div');
         this.filterDiv.style.backgroundColor = this.backgroundColor;
@@ -41,7 +41,7 @@ class Filter {
 
         // Create the list in the menu
         this.filterList = document.createElement('ol');
-        this.update(this.listFilters);
+        this.updateHTML(this.listFilters);
         this.filterList.style.display = 'none';
         this.filterDiv.append(this.filterList);
 
@@ -55,44 +55,51 @@ class Filter {
         let filterArrow = filterSearch.querySelector('img');
 
         filterArrow.addEventListener('click', () => {
-            if(this.status) { // Close the filter
-                this.close();
+            if (this.status) { // Close the filter
+                this.closeTagMenu();
             } else { // Open the filter
-                this.open();
+                this.openTagMenu();
             }
         });
 
         /* Faire le focus sur la barre de recherche lors de l'ouverture du menu */
         filterTitle.addEventListener('click', () => {
-            this.open();
+            this.openTagMenu();
             filterInput.focus();
         });
 
         /* Fermer le filtre lors du clic à l'extérieur */
         document.addEventListener('mouseup', (event) => {
-            if(!this.filterContent.contains(event.target)) {
-                this.close();
+            if (!this.filterContent.contains(event.target)) {
+                this.closeTagMenu();
             }
+        })
+
+        /* Adapter les filtres selon la chercher dans le champ du filtre */
+        filterInput.addEventListener('input', (event) => {
+            let filterSearch = event.target.value;
+            let tmpListFilters = this.listFilters.filter(elem =>
+                elem.toLowerCase().includes(filterSearch.toLowerCase()));
+            this.updateHTML(tmpListFilters);
         })
     }
 
-    update(listFilters) {
+    updateHTML(listFilters) {
         this.filterList.innerHTML = ``;
+
         listFilters.forEach(element => {
             let option = document.createElement('li');
             option.innerText = element;
-            option.class = this.name.substring(0, 3);
             option.addEventListener('click', () => {
-                if(this.status) {
-                    this.addActiveFilter(element);
+                if (this.status) {
+                    this.createTag(element);
                 }
             });
             this.filterList.append(option);
         });
-        console.log(listFilters)
     }
-    
-    open() {
+
+    openTagMenu() {
         /* Fix the position of the main */
         let mainHTMLDiv = document.querySelector('main');
         mainHTMLDiv.style.position = 'absolute';
@@ -112,7 +119,7 @@ class Filter {
         this.filterContent.style.width = 'auto';
     }
 
-    close() {
+    closeTagMenu() {
         /* Give again the position of the main part */
         let mainHTMLDiv = document.querySelector('main');
         mainHTMLDiv.style.position = 'unset';
@@ -129,8 +136,8 @@ class Filter {
         this.filterContent.style.width = '15%';
     }
 
-    addActiveFilter(nameFilter) {
-        if(!this.activeFilters.includes(nameFilter)) {
+    createTag(nameFilter) {
+        if (!this.activeFilters.includes(nameFilter)) {
             let divActiveFilters = document.querySelector('.activeFilters');
             let filterIndex = this.activeFilters.push(nameFilter) - 1;
 
@@ -143,16 +150,16 @@ class Filter {
             `
             div.style.backgroundColor = this.backgroundColor;
             divActiveFilters.append(div);
-
-            div.querySelector('img').addEventListener('click', ()=> {
-                this.removeActiveFilter(div, filterIndex);
+            
+            div.querySelector('img').addEventListener('click', () => {
+                this.deleteTag(div, filterIndex);
             })
         }
         const changeEvent = new CustomEvent('filtersChange');
         window.dispatchEvent(changeEvent);
     }
 
-    removeActiveFilter(divActiveFilter, filterIndex) {
+    deleteTag(divActiveFilter, filterIndex) {
         this.activeFilters.splice(filterIndex, 1);
         divActiveFilter.remove();
         const changeEvent = new CustomEvent('filtersChange');

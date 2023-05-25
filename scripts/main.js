@@ -1,74 +1,58 @@
 const nav = document.querySelector('nav');
-let recipesFiltered = recipes; // Données filtrées qui seront manipulées
+let recipesFiltered = [...recipes]; // Données filtrées qui seront manipulées
 
 // Get lists of data needed
 let listIngredients = [];
 let listAppareils = [];
 let listUstensils = [];
 
-let menuIngredients = new Filter('Ingrédients', listIngredients, '#3282F7');
-let menuAppareils = new Filter('Appareils', listAppareils, '#68D9A4');
-let menuUstensils = new Filter('Ustensils', listUstensils, '#ED6454');
-
-
+let menuIngredients = new TagMenu('Ingrédients', listIngredients, '#3282F7');
+let menuAppareils = new TagMenu('Appareils', listAppareils, '#68D9A4');
+let menuUstensils = new TagMenu('Ustensils', listUstensils, '#ED6454');
 
 function getAvailableListFromRecipes(listRecipesAvailable) {
+    listIngredients = [];
+    listAppareils = [];
+    listUstensils = [];
+
     listRecipesAvailable.forEach((elem) => {
-        if(!listAppareils.includes(elem.appliance)) {
+        if (!listAppareils.includes(elem.appliance)) {
             listAppareils.push(elem.appliance)
         }
-    
+
         elem.ingredients.forEach((ingr) => {
-            if(!listIngredients.includes(ingr["ingredient"])) {
+            if (!listIngredients.includes(ingr["ingredient"])) {
                 listIngredients.push(ingr["ingredient"]);
             }
         });
-    
+
         elem.ustensils.forEach((ust) => {
-            if(!listUstensils.includes(ust)) {
+            if (!listUstensils.includes(ust)) {
                 listUstensils.push(ust);
             }
         });
     });
 }
 
-function createHTMLListRecipes(listRecipes) {
-    const main = document.querySelector('main');
-    if(listRecipes.length === 0) {
-        main.innerHTML = `
-        <p class='noResult'>
-            <b>Aucune recette ne correspond à votre critère…</b><br>
-            <i>Vous pouvez chercher « tarte aux pommes », « poisson », etc.</i>
-        </p>
-        `;
-    } else {
-        main.innerHTML = ``;
-        listRecipes.forEach(recipe => {
-            main.appendChild(RecipesFactory.create(recipe));
-        });
-    }
-
-    getAvailableListFromRecipes(listRecipes);
-    menuIngredients.update(listIngredients);
-    menuAppareils.update(listAppareils);
-    menuUstensils.update(listUstensils);
-}
-
 function init() {
     getAvailableListFromRecipes(recipes);
-    
+
     // Create Filter Menus
-    menuIngredients = new Filter('Ingrédients', listIngredients, '#3282F7');
+    menuIngredients = new TagMenu('Ingrédients', listIngredients, '#3282F7');
     nav.append(menuIngredients.filterContent);
 
-    menuAppareils = new Filter('Appareils', listAppareils, '#68D9A4');
+    menuAppareils = new TagMenu('Appareils', listAppareils, '#68D9A4');
     nav.append(menuAppareils.filterContent);
 
-    menuUstensils = new Filter('Ustensils', listUstensils, '#ED6454');
+    menuUstensils = new TagMenu('Ustensils', listUstensils, '#ED6454');
     nav.append(menuUstensils.filterContent);
 
     // Create Receipes
-    createHTMLListRecipes(recipes);
+    Recipes.createListHTML(recipes, document.querySelector('main'));
+    getAvailableListFromRecipes(recipes);
+    menuIngredients.updateHTML(listIngredients);
+    menuAppareils.updateHTML(listAppareils);
+    menuUstensils.updateHTML(listUstensils);
 
     /* Faire une recherche avec les tags des filtres à disposition */
     window.addEventListener('filtersChange', () => {
@@ -89,7 +73,11 @@ function init() {
                 recipe.ustensils.includes(filter)
             )
         })
-        createHTMLListRecipes(recipesFiltered);
+        Recipes.createListHTML(recipesFiltered, document.querySelector('main'));
+        getAvailableListFromRecipes(recipesFiltered);
+        menuIngredients.updateHTML(listIngredients);
+        menuAppareils.updateHTML(listAppareils);
+        menuUstensils.updateHTML(listUstensils);
     })
 }
 
@@ -103,16 +91,20 @@ function initEventHandler() {
     /* Faire une recherche avec le champ de recherche principal */
     let divMainSearchInput = document.querySelector('form input');
     divMainSearchInput.addEventListener('input', (event) => {
-        recipesFiltered = recipes;
+        recipesFiltered = [...recipes];
         let textSearch = event.target.value;
-        if(textSearch.length >= 3) {
+        if (textSearch.length >= 3) {
             recipesFiltered = recipesFiltered.filter(recipe => // Filter on name
                 recipe.name.toLowerCase().includes(textSearch.toLowerCase())
                 || recipe.ingredients.find(elem => elem.ingredient.toLowerCase().includes(textSearch.toLowerCase()))
                 || recipe.description.toLowerCase().includes(textSearch.toLowerCase())
             );
         }
-        createHTMLListRecipes(recipesFiltered);
+        Recipes.createListHTML(recipesFiltered, document.querySelector('main'));
+        getAvailableListFromRecipes(recipesFiltered);
+        menuIngredients.updateHTML(listIngredients);
+        menuAppareils.updateHTML(listAppareils);
+        menuUstensils.updateHTML(listUstensils);
     })
 }
 
