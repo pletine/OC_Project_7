@@ -13,10 +13,11 @@ class TagMenu {
 
     createHTML() {
         // Create the global div of the filter
-        this.filterDiv = document.createElement('div');
-        this.filterDiv.style.backgroundColor = this.backgroundColor;
+        this.menuDiv = document.createElement('div');
+        this.menuDiv.style.backgroundColor = this.backgroundColor;
+        // Normalize name to create the ID Name of the DOM element
         let idName = this.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-        this.filterDiv.id = idName + '-filter';
+        this.menuDiv.id = idName + '-filter';
 
         /* Create the div for title and search bar */
         let filterTitle = document.createElement('div');
@@ -37,19 +38,19 @@ class TagMenu {
         filterArrow.alt = 'Ouvrir ou fermer le filtre';
         filterTitle.append(filterArrow);
 
-        this.filterDiv.append(filterTitle);
+        this.menuDiv.append(filterTitle);
 
         // Create the list in the menu
         this.filterList = document.createElement('ol');
-        this.updateHTML(this.listFilters);
+        this.updateHTMLMenu(this.listFilters);
         this.filterList.style.display = 'none';
-        this.filterDiv.append(this.filterList);
+        this.menuDiv.append(this.filterList);
 
-        return this.filterDiv;
+        return this.menuDiv;
     }
 
     initEventListener() {
-        let filterSearch = this.filterDiv.querySelector('.searchBar');
+        let filterSearch = this.menuDiv.querySelector('.searchBar');
         let filterTitle = filterSearch.querySelector('p');
         let filterInput = filterSearch.querySelector('input');
         let filterArrow = filterSearch.querySelector('img');
@@ -80,13 +81,12 @@ class TagMenu {
             let filterSearch = event.target.value;
             let tmpListFilters = this.listFilters.filter(elem =>
                 elem.toLowerCase().includes(filterSearch.toLowerCase()));
-            this.updateHTML(tmpListFilters);
+            this.updateHTMLMenu(tmpListFilters);
         })
     }
 
-    updateHTML(listFilters) {
+    updateHTMLMenu(listFilters) {
         this.filterList.innerHTML = ``;
-
         listFilters.forEach(element => {
             let option = document.createElement('li');
             option.innerText = element;
@@ -97,43 +97,6 @@ class TagMenu {
             });
             this.filterList.append(option);
         });
-    }
-
-    openTagMenu() {
-        /* Fix the position of the main */
-        let mainHTMLDiv = document.querySelector('main');
-        mainHTMLDiv.style.position = 'absolute';
-        mainHTMLDiv.style.top = mainHTMLDiv.offsetTop.toString() + 'px';
-
-        /* Modify the search part of the menu */
-        let div = this.filterDiv.querySelector('.searchBar');
-        this.filterContent.querySelector('.searchBar img').style.transform = 'rotate(180deg)';
-        div.childNodes[0].style.display = 'none';
-        div.childNodes[1].style.display = 'block';
-        this.status = true;
-
-        /* Show the choices of the filter menu */
-        this.filterContent.querySelector('ol').style.display = 'grid';
-        this.filterContent.querySelector('ol').style.gridTemplateColumns = "auto auto auto";
-        this.filterContent.style.height = 'auto';
-        this.filterContent.style.width = 'auto';
-    }
-
-    closeTagMenu() {
-        /* Give again the position of the main part */
-        let mainHTMLDiv = document.querySelector('main');
-        mainHTMLDiv.style.position = 'unset';
-        mainHTMLDiv.style.top = 'none';
-
-        let div = this.filterDiv.querySelector('.searchBar');
-        this.filterContent.querySelector('.searchBar img').style.transform = 'rotate(0deg)';
-        div.childNodes[0].style.display = 'block';
-        div.childNodes[1].style.display = 'none';
-        div.querySelector('input').value = '';
-        this.status = false;
-        this.filterContent.querySelector('ol').style.display = 'none';
-        this.filterContent.style.height = '60px';
-        this.filterContent.style.width = '15%';
     }
 
     createTag(nameFilter) {
@@ -164,5 +127,42 @@ class TagMenu {
         divActiveFilter.remove();
         const changeEvent = new CustomEvent('filtersChange');
         window.dispatchEvent(changeEvent);
+    }
+
+    openTagMenu() {
+        /* Fix the position of the main */
+        let mainHTMLDiv = document.querySelector('main');
+        mainHTMLDiv.style.position = 'absolute';
+        mainHTMLDiv.style.top = mainHTMLDiv.offsetTop.toString() + 'px';
+
+        /* Modify the search part of the menu */
+        let div = this.menuDiv.querySelector('.searchBar');
+        this.filterContent.querySelector('.searchBar img').style.transform = 'rotate(180deg)';
+        div.childNodes[0].style.display = 'none';
+        div.childNodes[1].style.display = 'block';
+        this.status = true;
+
+        /* Show the choices of the filter menu */
+        this.filterContent.querySelector('ol').style.display = 'grid';
+        this.filterContent.querySelector('ol').style.gridTemplateColumns = "auto auto auto";
+        this.filterContent.style.height = 'auto';
+        this.filterContent.style.width = 'auto';
+    }
+
+    closeTagMenu() {
+        /* Give again the position of the main part */
+        let mainHTMLDiv = document.querySelector('main');
+        mainHTMLDiv.style.position = 'unset';
+        mainHTMLDiv.style.top = 'none';
+
+        let div = this.menuDiv.querySelector('.searchBar');
+        this.filterContent.querySelector('.searchBar img').style.transform = 'rotate(0deg)';
+        div.childNodes[0].style.display = 'block';
+        div.childNodes[1].style.display = 'none';
+        div.querySelector('input').value = '';
+        this.status = false;
+        this.filterContent.querySelector('ol').style.display = 'none';
+        this.filterContent.style.height = '60px';
+        this.filterContent.style.width = '15%';
     }
 }
