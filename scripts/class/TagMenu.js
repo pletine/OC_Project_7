@@ -79,14 +79,26 @@ class TagMenu {
         /* Adapter les filtres selon la chercher dans le champ du filtre */
         filterInput.addEventListener('input', (event) => {
             let filterSearch = event.target.value;
+            console.log(filterSearch);
+            console.log(this.listFilters);
             let tmpListFilters = this.listFilters.filter(elem =>
                 elem.toLowerCase().includes(filterSearch.toLowerCase()));
-            this.updateHTMLMenu(tmpListFilters);
+            console.log(tmpListFilters);
+            
+            this.updateHTMLMenu(tmpListFilters, false);
         })
     }
 
-    updateHTMLMenu(listFilters) {
+    updateHTMLMenu(listFilters, updateList) {
+        // Reset Menu HTML content
         this.filterList.innerHTML = ``;
+
+        // If updateList is true, update the storage list of filters for the menu
+        if(updateList) {
+            this.listFilters = listFilters;
+        }
+
+        // Create the new menu list content
         listFilters.forEach(element => {
             let option = document.createElement('li');
             option.innerText = element;
@@ -100,6 +112,7 @@ class TagMenu {
     }
 
     createTag(nameFilter) {
+        // Create a tag div and add it to the activeFilters section
         if (!this.activeFilters.includes(nameFilter)) {
             let divActiveFilters = document.querySelector('.activeFilters');
             let filterIndex = this.activeFilters.push(nameFilter) - 1;
@@ -118,14 +131,23 @@ class TagMenu {
                 this.deleteTag(div, filterIndex);
             })
         }
-        const changeEvent = new CustomEvent('filtersChange');
+        
+        const changeEvent = new CustomEvent('addTag', {
+            detail: {
+                menu: this,
+            }
+        });
         window.dispatchEvent(changeEvent);
     }
 
     deleteTag(divActiveFilter, filterIndex) {
         this.activeFilters.splice(filterIndex, 1);
         divActiveFilter.remove();
-        const changeEvent = new CustomEvent('filtersChange');
+        const changeEvent = new CustomEvent('deleteTag', {
+            detail: {
+                menu: this,
+            }
+        });
         window.dispatchEvent(changeEvent);
     }
 
@@ -155,11 +177,13 @@ class TagMenu {
         mainHTMLDiv.style.position = 'unset';
         mainHTMLDiv.style.top = 'none';
 
-        let div = this.menuDiv.querySelector('.searchBar');
+
+        const div = this.menuDiv.querySelector('.searchBar');
         this.filterContent.querySelector('.searchBar img').style.transform = 'rotate(0deg)';
         div.childNodes[0].style.display = 'block';
         div.childNodes[1].style.display = 'none';
         div.querySelector('input').value = '';
+        this.updateHTMLMenu(this.listFilters, false);
         this.status = false;
         this.filterContent.querySelector('ol').style.display = 'none';
         this.filterContent.style.height = '60px';
