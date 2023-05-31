@@ -2,26 +2,29 @@ class View {
     constructor() {
         // Liste des recettes actives
         this.listActiveRecipes = [...recipes];
-        // Liste les recettes écartées pour optimiser la recherche
-        this.listUnactiveRecipes = [];
 
         // Créer les cartes de recettes
-        Recipes.createListHTML(this.listActiveRecipes, document.querySelector('main'));
-        
+        Recipes.createListHTML(recipes, document.querySelector('main'));
+
         // Créer les menus de tag avec la liste des tags correspondants
         this.menuIngredients = new TagMenu('Ingrédients', [], '#3282F7');
         this.menuAppareils = new TagMenu('Appareils', [], '#68D9A4');
         this.menuUstensils = new TagMenu('Ustensils', [], '#ED6454');
 
-        // Garde en mémoire l'ancienne recherche de la barre de recherche pour optimiser les changements
-        this.oldSearchInputValue = '';
-
         // Liste des tags disponibles dans chaque menu
         this.listTagIngredients = [];
         this.listTagAppareils = [];
         this.listTagUstensils = [];
+
+        // Liste de tous les tags actifs selon les menus
+        this.listMenuTagsActive = {
+            'Ingrédients': this.menuIngredients.activeFilters,
+            'Appareils': this.menuAppareils.activeFilters,
+            'Ustensils': this.menuUstensils.activeFilters,
+        }
+
         // Récupérer tous les ingrédients, appareils et ustensils des recettes 'actives'
-        this.updateAvailableTags(this.listActiveRecipes);
+        this.updateAvailableTags(recipes);
         // Mise à jour des Menu
         this.menuIngredients.updateHTMLMenu(this.listTagIngredients, true);
         this.menuAppareils.updateHTMLMenu(this.listTagAppareils, true);
@@ -46,20 +49,17 @@ class View {
         divMainSearchInput.addEventListener('input', (event) => {
             const textSearched = event.target.value;
             let errorParagraphe = document.getElementById('errorMainSearch');
+
             if (textSearched.length >= 3) {
-                if(errorParagraphe) {
+                if (errorParagraphe) {
                     errorParagraphe.style.display = 'none';
                 }
-
-                [this.listActiveRecipes, this.listUnactiveRecipes] = Search.manageSearchMethod(
-                        textSearched,
-                        this.oldSearchInputValue,
-                        this.listActiveRecipes, 
-                        this.listUnactiveRecipes);
+                this.listActiveRecipes = Search.globalSearch(recipes, divMainSearchInput.value, this.listMenuTagsActive);
+                this.updatePage();
+            } else {
+                this.listActiveRecipes = [...recipes];
+                this.updatePage();
             }
-            this.oldSearchInputValue = textSearched;
-
-            this.updatePage();
         })
 
         /* Empêcher l'action par défaut du bouton de recherche */
@@ -86,19 +86,15 @@ class View {
         })
 
         /* Faire une recherche avec les tags des filtres à disposition */
-        window.addEventListener('addTag', (event) => {
-            this.listActiveRecipes = Search.tagFilterSearch(
-                this.listActiveRecipes, 
-                event.detail.menu.name, 
-                event.detail.menu.activeFilters);
-            this.listUnactiveRecipes = [];
+        window.addEventListener('addTag', () => {
+            this.listActiveRecipes = Search.globalSearch(recipes, divMainSearchInput.value, this.listMenuTagsActive);
             this.updatePage();
         })
 
         /* Remettre les recettes qui ne correspondait pas au filtre supprimé */
-        window.addEventListener('deleteTag', (event) => {
-            console.log('Remove Tag');
-            console.log(event.detail.menu.name); // output the name of the menu where the tag is from
+        window.addEventListener('deleteTag', () => {
+            this.listActiveRecipes = Search.globalSearch(recipes, divMainSearchInput.value, this.listMenuTagsActive);
+            this.updatePage();
         })
 
         /* Bouton de reset des données */
@@ -134,7 +130,7 @@ class View {
     updateAvailableTags(listRecipes) {
         listRecipes.forEach((elem) => {
             // Faire la liste des appareils possibles
-            if (!this.listTagAppareils.includes(elem.appliance) 
+            if (!this.listTagAppareils.includes(elem.appliance)
                 && !this.menuAppareils.activeFilters.includes(elem.appliance)) {
                 this.listTagAppareils.push(elem.appliance)
             }

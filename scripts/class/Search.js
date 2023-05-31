@@ -1,67 +1,72 @@
 class Search {
-    static globalSearch(textSearchValue, listRecipes, activIngr, activApp, activUst) {
-        let filteredArray = listRecipes;
-
-        filteredArray = this.mainInputSearch(textSearchValue, filteredArray);
-        filteredArray = this.ingredientTagFilter(filteredArray, activIngr);
-        filteredArray = this.appareilsTagFilter(filteredArray, activApp);
-        filteredArray = this.ustensilsTagFilter(filteredArray, activUst);
-
+    static globalSearch(listRecipes, textSearchValue, listAllActivTags) {
+        let filteredArray = Search.mainInputSearch(textSearchValue, listRecipes);
+        // filteredArray = Search.tagFilterSearch(filteredArray, 'Ingrédients', listAllActivTags['Ingrédients']);
+        // filteredArray = Search.tagFilterSearch(filteredArray, 'Appareils', listAllActivTags['Appareils']);
+        // filteredArray = Search.tagFilterSearch(filteredArray, 'Ustensils', listAllActivTags['Ustensils']);
         return filteredArray;
     }
 
-    static manageSearchMethod(textSearch, inputOldSearch, inputActiveRecipes, inputUnactiveRecipes) {
-        let outputActiveRecipes = [];
-        let outputUnactiveRecipes = [];
-
-        // // Si le texte s'allonge, chercher dans la liste des recettes déjà triées
-        // if (textSearch.length > inputOldSearch.length) {
-        //     // Filtrer les recettes actuelles
-        //     let tmpRecipes = Search.mainInputSearch(textSearch, inputActiveRecipes);
-        //     // En extraire les recettes qui ont été écartées
-        //     let tmpUnactiveRecipes = inputActiveRecipes.filter(x => !tmpRecipes.includes(x));
-        //     // Rajouter les recettes écartées à la liste complète des recettes écartées
-        //     outputUnactiveRecipes = [...new Set([...inputUnactiveRecipes, ...tmpUnactiveRecipes])]
-        //     // Mettre à jour la liste des recettes demandées
-        //     outputActiveRecipes = tmpRecipes;
-        // }
-        // else // Si le texte est raccourci, chercher dans les recettes mises de côté
-        // {
-        //     let tmpRecipes = Search.mainInputSearch(textSearch, inputUnactiveRecipes);
-        //     // Elever ces recettes de la liste des recettes mises de côté
-        //     outputUnactiveRecipes = inputUnactiveRecipes.filter(x => !tmpRecipes.includes(x));
-        //     // Rajouter ces recettes ensuite dans la liste des recettes présentées
-        //     outputActiveRecipes = [...new Set([...inputActiveRecipes, ...tmpRecipes])]
-        // }
-
-        return [outputActiveRecipes, outputUnactiveRecipes];
-    }
-
     static mainInputSearch(textSearchValue, listRecipes) {
-        let filteredArray = listRecipes;
-
-        filteredArray = filteredArray.slice(0, 12);
+        let filteredArray = [];
+        for (let i = 0; i < listRecipes.length; i++) {
+            if (listRecipes[i].name.includes(textSearchValue)
+                || listRecipes[i].description.includes(textSearchValue)) {
+                filteredArray.push(listRecipes[i]);
+                continue;
+            } else {
+                for (let j = 0; j < listRecipes[i].ingredients.length; j++) {
+                    if (listRecipes[i].ingredients[j].ingredient.includes(textSearchValue)) {
+                        filteredArray.push(listRecipes[i]);
+                        break;
+                    }
+                }
+                continue;
+            }
+        }
 
         return filteredArray;
     }
 
     static tagFilterSearch(listRecipes, menuName, listActivTags) {
-        let filteredArray = listRecipes;
+        let filteredArray = [];
 
-        switch (menuName) {
-            case 'Ingrédients':
-                filteredArray = filteredArray.slice(0, 9);
-                break;
-            case 'Appareils':
-                filteredArray = filteredArray.slice(0, 6);
-                break;
-            case 'Ustensils':
-                filteredArray = filteredArray.slice(0, 3);
-                break;
-            default:
-                break;
+        for (let i = 0; i < listRecipes.length; i++) { // On parcourt toutes les recettes
+            
+            switch (menuName) {
+                case 'Ingrédients':
+                    let recipeValidated = true;
+                    let contain = false;
+
+                    for (let j = 0; j < listActivTags[menuName].length; j++) { // On parcourt tous les tags actifs pour cette recette
+                        contain = false;
+                        for(let k = 0; k < listRecipes[i].ingredients.length; k++) { // On parcourt tous les ingrédients de la recette en cours
+                            if(listRecipes[i].ingredients[k].ingredient === listActivTags[menuName][j]) {
+                                contain = true;
+                                break;
+                            }
+                        }
+                        if(!contain) { // Le tag étudié n'a pas été trouvé dans la liste des ingrédients
+                            recipeValidated = false;
+                            break; // On passe à la recette suivante
+                        }
+                    }
+
+                    if(recipeValidated) {
+                        filteredArray.push(listRecipes[i]);
+                    }
+                    break;
+                case 'Appareils':
+                    filteredArray = filteredArray.slice(0, 6);
+                    break;
+                case 'Ustensils':
+                    filteredArray = filteredArray.slice(0, 3);
+                    break;
+                default:
+                    break;
+            }
+
         }
-
         return filteredArray;
     }
 }
