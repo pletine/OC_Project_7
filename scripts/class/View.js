@@ -17,15 +17,23 @@ class View {
         this.oldSearchInputValue = '';
 
         // Liste des tags disponibles dans chaque menu
-        this.listTagIngredients = [];
-        this.listTagAppareils = [];
-        this.listTagUstensils = [];
+        this.listTagInMenu = {
+            'ing': [],
+            'app': [],
+            'ust': [],
+        }
+        // Liste des tags actifs
+        this.listActivTags = {
+            'Ingrédients': [],
+            'Appareils': [],
+            'Ustensils': [],
+        }
         // Récupérer tous les ingrédients, appareils et ustensils des recettes 'actives'
         this.updateAvailableTags(this.listActiveRecipes);
         // Mise à jour des Menu
-        this.menuIngredients.updateHTMLMenu(this.listTagIngredients, true);
-        this.menuAppareils.updateHTMLMenu(this.listTagAppareils, true);
-        this.menuUstensils.updateHTMLMenu(this.listTagUstensils, true);
+        this.menuIngredients.updateHTMLMenu(this.listTagInMenu['ing'], true);
+        this.menuAppareils.updateHTMLMenu(this.listTagInMenu['app'], true);
+        this.menuUstensils.updateHTMLMenu(this.listTagInMenu['ust'], true);
 
         // Ajouter les menus de tag à la partie de navigation de la page
         const nav = document.querySelector('nav');
@@ -51,11 +59,20 @@ class View {
                     errorParagraphe.style.display = 'none';
                 }
 
-                [this.listActiveRecipes, this.listUnactiveRecipes] = Search.manageSearchMethod(
+                [this.listActiveRecipes, this.listUnactiveRecipes] = Search.manageTextSearchMethod(
                         textSearched,
                         this.oldSearchInputValue,
                         this.listActiveRecipes, 
                         this.listUnactiveRecipes);
+            } else {
+                this.listActiveRecipes = [...recipes];
+                [this.listActiveRecipes, this.listUnactiveRecipes] = Search.manageTagSearchMethod(
+                    false,
+                    this.listActiveRecipes,
+                    this.listUnactiveRecipes,
+                    '',
+                    '',
+                    {});
             }
             this.oldSearchInputValue = textSearched;
 
@@ -87,18 +104,31 @@ class View {
 
         /* Faire une recherche avec les tags des filtres à disposition */
         window.addEventListener('addTag', (event) => {
-            this.listActiveRecipes = Search.tagFilterSearch(
-                this.listActiveRecipes, 
-                event.detail.menu.name, 
-                event.detail.menu.activeFilters);
-            this.listUnactiveRecipes = [];
+            [this.listActiveRecipes, this.listUnactiveRecipes] = Search.manageTagSearchMethod(
+                true,
+                this.listActiveRecipes,
+                this.listUnactiveRecipes,
+                event.detail.menu.name,
+                event.detail.tag,
+                this.listActivTags);
             this.updatePage();
         })
 
         /* Remettre les recettes qui ne correspondait pas au filtre supprimé */
         window.addEventListener('deleteTag', (event) => {
-            console.log('Remove Tag');
-            console.log(event.detail.menu.name); // output the name of the menu where the tag is from
+            this.listActivTags = {
+                'Ingrédients': this.menuIngredients.activeFilters,
+                'Appareils': this.menuAppareils.activeFilters,
+                'Ustensils': this.menuUstensils.activeFilters,
+            }
+            [this.listActiveRecipes, this.listUnactiveRecipes] = Search.manageTagSearchMethod(
+                false,
+                this.listActiveRecipes,
+                this.listUnactiveRecipes,
+                event.detail.menu.name,
+                '',
+                this.listActivTags);
+            this.updatePage();
         })
 
         /* Bouton de reset des données */
@@ -110,9 +140,9 @@ class View {
             divMainSearchInput.value = '';
 
             // Reset Tag Search
-            this.listTagIngredients = [];
-            this.listTagAppareils = [];
-            this.listTagUstensils = [];
+            this.listTagInMenu['ing'] = [];
+            this.listTagInMenu['app'] = [];
+            this.listTagInMenu['ust'] = [];
             document.querySelector('.activeFilters').innerHTML = ``;
 
             // Update Page with reset data
@@ -123,10 +153,16 @@ class View {
     updatePage() {
         Recipes.createListHTML(this.listActiveRecipes, document.querySelector('main'));
 
+        this.listActivTags = {
+            'Ingrédients': [...this.menuIngredients.activeFilters],
+            'Appareils': [...this.menuAppareils.activeFilters],
+            'Ustensils': [...this.menuUstensils.activeFilters],
+        }
+
         this.updateAvailableTags(this.listActiveRecipes);
-        this.menuIngredients.updateHTMLMenu(this.listTagIngredients, true);
-        this.menuAppareils.updateHTMLMenu(this.listTagAppareils, true);
-        this.menuUstensils.updateHTMLMenu(this.listTagUstensils, true);
+        this.menuIngredients.updateHTMLMenu(this.listTagInMenu['ing'], true);
+        this.menuAppareils.updateHTMLMenu(this.listTagInMenu['app'], true);
+        this.menuUstensils.updateHTMLMenu(this.listTagInMenu['ust'], true);
     }
 
     /* Mettre à jour la liste des ingrédients, appareils et ustensils possibles
@@ -134,24 +170,24 @@ class View {
     updateAvailableTags(listRecipes) {
         listRecipes.forEach((elem) => {
             // Faire la liste des appareils possibles
-            if (!this.listTagAppareils.includes(elem.appliance) 
+            if (!this.listTagInMenu['app'].includes(elem.appliance) 
                 && !this.menuAppareils.activeFilters.includes(elem.appliance)) {
-                this.listTagAppareils.push(elem.appliance)
+                this.listTagInMenu['app'].push(elem.appliance)
             }
 
             // Faire la liste des ingrédients possibles
             elem.ingredients.forEach((ingr) => {
-                if (!this.listTagIngredients.includes(ingr['ingredient'])
+                if (!this.listTagInMenu['ing'].includes(ingr['ingredient'])
                     && !this.menuIngredients.activeFilters.includes(ingr['ingredient'])) {
-                    this.listTagIngredients.push(ingr['ingredient']);
+                    this.listTagInMenu['ing'].push(ingr['ingredient']);
                 }
             });
 
             // Faire la liste des ustensils possibles
             elem.ustensils.forEach((ust) => {
-                if (!this.listTagUstensils.includes(ust)
+                if (!this.listTagInMenu['ust'].includes(ust)
                     && !this.menuUstensils.activeFilters.includes(ust)) {
-                    this.listTagUstensils.push(ust);
+                    this.listTagInMenu['ust'].push(ust);
                 }
             });
         });

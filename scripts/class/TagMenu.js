@@ -131,10 +131,11 @@ class TagMenu {
                 this.deleteTag(div, filterIndex);
             })
         }
-        
+
         const changeEvent = new CustomEvent('addTag', {
             detail: {
                 menu: this,
+                tag: nameFilter,
             }
         });
         window.dispatchEvent(changeEvent);
