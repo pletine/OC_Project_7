@@ -1,9 +1,9 @@
 class Search {
     static globalSearch(listRecipes, textSearchValue, listAllActivTags) {
         let filteredArray = Search.mainInputSearch(textSearchValue, listRecipes);
-        // filteredArray = Search.tagFilterSearch(filteredArray, 'Ingrédients', listAllActivTags['Ingrédients']);
-        // filteredArray = Search.tagFilterSearch(filteredArray, 'Appareils', listAllActivTags['Appareils']);
-        // filteredArray = Search.tagFilterSearch(filteredArray, 'Ustensils', listAllActivTags['Ustensils']);
+        filteredArray = Search.tagFilterSearch(filteredArray, 'Ingrédients', listAllActivTags['Ingrédients']);
+        filteredArray = Search.tagFilterSearch(filteredArray, 'Appareils', listAllActivTags['Appareils']);
+        filteredArray = Search.tagFilterSearch(filteredArray, 'Ustensils', listAllActivTags['Ustensils']);
         return filteredArray;
     }
 
@@ -30,39 +30,36 @@ class Search {
 
     static tagFilterSearch(listRecipes, menuName, listActivTags) {
         let filteredArray = [];
+        if(listActivTags.length === 0) {
+            return listRecipes;
+        }
 
         switch (menuName) {
             case 'Ingrédients':
-                let recipeValidated = true;
-                let contain = false;
-
-                for (let j = 0; j < listActivTags[menuName].length; j++) { // On parcourt tous les tags actifs pour cette recette
-                    contain = false;
-                    for(let k = 0; k < listRecipes[i].ingredients.length; k++) { // On parcourt tous les ingrédients de la recette en cours
-                        if(listRecipes[i].ingredients[k].ingredient === listActivTags[menuName][j]) {
-                            contain = true;
-                            break;
-                        }
-                    }
-                    if(!contain) { // Le tag étudié n'a pas été trouvé dans la liste des ingrédients
-                        recipeValidated = false;
-                        break; // On passe à la recette suivante
-                    }
-                }
-
-                if(recipeValidated) {
-                    filteredArray.push(listRecipes[i]);
-                }
+                listActivTags.forEach((filterTag) => {
+                    filteredArray = listRecipes.filter(rec =>
+                        rec.ingredients.some(elem =>
+                            elem.ingredient.toLowerCase().includes(filterTag.toLowerCase())
+                        )
+                    );
+                })
                 break;
             case 'Appareils':
-                filteredArray = filteredArray.slice(0, 6);
+                listActivTags.forEach((filterTag) => {
+                    filteredArray = listRecipes.filter(rec =>
+                        rec.appliance === filterTag
+                    );
+                })
                 break;
             case 'Ustensils':
-                filteredArray = filteredArray.slice(0, 3);
+                listActivTags.forEach((filterTag) => {
+                    filteredArray = listRecipes.filter(rec =>
+                        rec.ustensils.includes(filterTag)
+                    );
+                })
                 break;
             default:
                 break;
-
         }
         return filteredArray;
     }

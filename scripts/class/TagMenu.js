@@ -78,13 +78,9 @@ class TagMenu {
 
         /* Adapter les filtres selon la chercher dans le champ du filtre */
         filterInput.addEventListener('input', (event) => {
-            let filterSearch = event.target.value;
-            console.log(filterSearch);
-            console.log(this.listFilters);
             let tmpListFilters = this.listFilters.filter(elem =>
-                elem.toLowerCase().includes(filterSearch.toLowerCase()));
-            console.log(tmpListFilters);
-            
+                elem.toLowerCase().includes(event.target.value.toLowerCase()));
+
             this.updateHTMLMenu(tmpListFilters, false);
         })
     }
@@ -94,7 +90,7 @@ class TagMenu {
         this.filterList.innerHTML = ``;
 
         // If updateList is true, update the storage list of filters for the menu
-        if(updateList) {
+        if (updateList) {
             this.listFilters = listFilters;
         }
 
@@ -126,12 +122,12 @@ class TagMenu {
             `
             div.style.backgroundColor = this.backgroundColor;
             divActiveFilters.append(div);
-            
+
             div.querySelector('img').addEventListener('click', () => {
                 this.deleteTag(div, filterIndex);
             })
         }
-        
+
         const changeEvent = new CustomEvent('addTag', {
             detail: {
                 menu: this,
