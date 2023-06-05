@@ -1,7 +1,5 @@
 class Search {
     static globalSearch(listRecipes, textSearchValue, listAllActivTags) {
-        console.log('Filter')
-        console.log(listAllActivTags);
         let filteredArray = Search.mainInputSearch(textSearchValue, listRecipes);
         filteredArray = Search.tagFilterSearch(filteredArray, 'Ingrédients', listAllActivTags['Ingrédients']);
         filteredArray = Search.tagFilterSearch(filteredArray, 'Appareils', listAllActivTags['Appareils']);

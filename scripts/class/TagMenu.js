@@ -94,8 +94,13 @@ class TagMenu {
             this.listFilters = listFilters;
         }
 
+        // Prendre en compte le texte de la recherche en cours
+        const inputField = this.menuDiv.querySelector('.searchBar').querySelector('input');
+        let tmpListFilters = listFilters.filter(elem =>
+            elem.toLowerCase().includes(inputField.value.toLowerCase()));
+
         // Create the new menu list content
-        listFilters.forEach(element => {
+        tmpListFilters.forEach(element => {
             const option = document.createElement('li');
             option.innerText = element;
             option.addEventListener('click', () => {
@@ -110,13 +115,13 @@ class TagMenu {
     createTag(nameFilter) {
         // Create a tag div and add it to the activeFilters section
         if (!this.activeFilters.includes(nameFilter)) {
-            const divActiveFilters = document.querySelector('.activeFilters');
-            const filterIndex = this.activeFilters.push(nameFilter) - 1;
+            this.activeFilters.push(nameFilter);
 
+            const divActiveFilters = document.querySelector('.activeFilters');
             const div = document.createElement('div');
             div.innerHTML = `
                 <p>${nameFilter}</p>
-                <img 
+                <img
                     src='assets/closeActiveFilter.svg' 
                     alt='Supprimer ce filtre'>
             `
@@ -124,7 +129,7 @@ class TagMenu {
             divActiveFilters.append(div);
 
             div.querySelector('img').addEventListener('click', () => {
-                this.deleteTag(div, filterIndex);
+                this.deleteTag(div);
             })
         }
 
@@ -136,9 +141,13 @@ class TagMenu {
         window.dispatchEvent(changeEvent);
     }
 
-    deleteTag(divActiveFilter, filterIndex) {
-        this.activeFilters.splice(filterIndex, 1);
+    deleteTag(divActiveFilter) {
+        const findElement = divActiveFilter.querySelector('p');
+        const indexElement = this.activeFilters.indexOf(findElement.innerText);
+
+        this.activeFilters.splice(indexElement, 1);
         divActiveFilter.remove();
+        
         const changeEvent = new CustomEvent('deleteTag', {
             detail: {
                 menu: this,
