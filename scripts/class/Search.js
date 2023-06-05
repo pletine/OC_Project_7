@@ -1,5 +1,7 @@
 class Search {
     static globalSearch(listRecipes, textSearchValue, listAllActivTags) {
+        console.log('Filter')
+        console.log(listAllActivTags);
         let filteredArray = Search.mainInputSearch(textSearchValue, listRecipes);
         filteredArray = Search.tagFilterSearch(filteredArray, 'Ingrédients', listAllActivTags['Ingrédients']);
         filteredArray = Search.tagFilterSearch(filteredArray, 'Appareils', listAllActivTags['Appareils']);
@@ -29,7 +31,7 @@ class Search {
     }
 
     static tagFilterSearch(listRecipes, menuName, listActivTags) {
-        let filteredArray = [];
+        let filteredArray = listRecipes;
         if(listActivTags.length === 0) {
             return listRecipes;
         }
@@ -37,24 +39,24 @@ class Search {
         switch (menuName) {
             case 'Ingrédients':
                 listActivTags.forEach((filterTag) => {
-                    filteredArray = listRecipes.filter(rec =>
-                        rec.ingredients.some(elem =>
-                            elem.ingredient.toLowerCase().includes(filterTag.toLowerCase())
+                    filteredArray = filteredArray.filter(rec =>
+                        rec.ingredients.some(elem => 
+                            elem['ingredient'].toLowerCase() === filterTag.toLowerCase())
                         )
-                    );
                 })
                 break;
             case 'Appareils':
                 listActivTags.forEach((filterTag) => {
-                    filteredArray = listRecipes.filter(rec =>
-                        rec.appliance === filterTag
+                    filteredArray = filteredArray.filter(rec =>
+                        rec.appliance.toLowerCase() === filterTag.toLowerCase()
                     );
                 })
                 break;
             case 'Ustensils':
                 listActivTags.forEach((filterTag) => {
-                    filteredArray = listRecipes.filter(rec =>
-                        rec.ustensils.includes(filterTag)
+                    filteredArray = filteredArray.filter(rec =>
+                        rec.ustensils.some(usten =>
+                            usten.toLowerCase() === filterTag.toLowerCase())
                     );
                 })
                 break;

@@ -35,12 +35,6 @@ class View {
         nav.append(this.menuIngredients.filterContent);
         nav.append(this.menuAppareils.filterContent);
         nav.append(this.menuUstensils.filterContent);
-
-        // Ajout d'un bouton pour effacer tous les champs de recherche
-        let resetButton = document.createElement('div');
-        resetButton.id = 'resetButton';
-        resetButton.innerText = 'Effacer la recherche';
-        nav.append(resetButton);
     }
 
     initEventHandler() {
@@ -96,24 +90,6 @@ class View {
             this.listActiveRecipes = Search.globalSearch(recipes, divMainSearchInput.value, this.listMenuTagsActive);
             this.updatePage();
         })
-
-        /* Bouton de reset des données */
-        const resetButton = document.getElementById('resetButton');
-        resetButton.addEventListener('click', () => {
-            this.listActiveRecipes = [...recipes];
-
-            // Reset Search Input
-            divMainSearchInput.value = '';
-
-            // Reset Tag Search
-            this.listTagIngredients = [];
-            this.listTagAppareils = [];
-            this.listTagUstensils = [];
-            document.querySelector('.activeFilters').innerHTML = ``;
-
-            // Update Page with reset data
-            this.updatePage();
-        });
     }
 
     updatePage() {
@@ -128,26 +104,30 @@ class View {
     /* Mettre à jour la liste des ingrédients, appareils et ustensils possibles
     Selon les recettes actives */
     updateAvailableTags(listRecipes) {
+        this.listTagAppareils = [];
+        this.listTagIngredients = [];
+        this.listTagUstensils = [];
+
         listRecipes.forEach((elem) => {
             // Faire la liste des appareils possibles
-            if (!this.listTagAppareils.includes(elem.appliance)
-                && !this.menuAppareils.activeFilters.includes(elem.appliance)) {
-                this.listTagAppareils.push(elem.appliance)
+            if (!this.listTagAppareils.includes(elem.appliance.toLowerCase())
+                && !this.menuAppareils.activeFilters.includes(elem.appliance.toLowerCase())) {
+                this.listTagAppareils.push(elem.appliance.toLowerCase())
             }
 
             // Faire la liste des ingrédients possibles
             elem.ingredients.forEach((ingr) => {
-                if (!this.listTagIngredients.includes(ingr['ingredient'])
-                    && !this.menuIngredients.activeFilters.includes(ingr['ingredient'])) {
-                    this.listTagIngredients.push(ingr['ingredient']);
+                if (!this.listTagIngredients.includes(ingr['ingredient'].toLowerCase())
+                    && !this.menuIngredients.activeFilters.includes(ingr['ingredient'].toLowerCase())) {
+                    this.listTagIngredients.push(ingr['ingredient'].toLowerCase());
                 }
             });
 
             // Faire la liste des ustensils possibles
             elem.ustensils.forEach((ust) => {
-                if (!this.listTagUstensils.includes(ust)
-                    && !this.menuUstensils.activeFilters.includes(ust)) {
-                    this.listTagUstensils.push(ust);
+                if (!this.listTagUstensils.includes(ust.toLowerCase())
+                    && !this.menuUstensils.activeFilters.includes(ust.toLowerCase())) {
+                    this.listTagUstensils.push(ust.toLowerCase());
                 }
             });
         });

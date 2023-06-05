@@ -96,7 +96,7 @@ class TagMenu {
 
         // Create the new menu list content
         listFilters.forEach(element => {
-            let option = document.createElement('li');
+            const option = document.createElement('li');
             option.innerText = element;
             option.addEventListener('click', () => {
                 if (this.status) {
@@ -110,10 +110,10 @@ class TagMenu {
     createTag(nameFilter) {
         // Create a tag div and add it to the activeFilters section
         if (!this.activeFilters.includes(nameFilter)) {
-            let divActiveFilters = document.querySelector('.activeFilters');
-            let filterIndex = this.activeFilters.push(nameFilter) - 1;
+            const divActiveFilters = document.querySelector('.activeFilters');
+            const filterIndex = this.activeFilters.push(nameFilter) - 1;
 
-            let div = document.createElement('div');
+            const div = document.createElement('div');
             div.innerHTML = `
                 <p>${nameFilter}</p>
                 <img 
