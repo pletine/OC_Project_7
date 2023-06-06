@@ -12,7 +12,7 @@ class Search {
         if(textSearch.length > inputOldSearch.length) {
             let tmpActiveRecipes = Search.mainInputSearch(textSearch, inputActiveRecipes);
             let tmpUnactiveRecipes = inputActiveRecipes.filter(x => !tmpActiveRecipes.includes(x));
-            outputUnactiveRecipes = [...new Set([...inputUnactiveRecipes], [...tmpUnactiveRecipes])];
+            outputUnactiveRecipes = inputUnactiveRecipes.concat(tmpUnactiveRecipes);
             outputActiveRecipes = [...tmpActiveRecipes];
         }
         else if(textSearch.length < inputOldSearch.length) { // Texte retiré
@@ -24,7 +24,7 @@ class Search {
             } else {
                 let tmpActiveRecipes = Search.mainInputSearch(textSearch, inputUnactiveRecipes);
                 outputUnactiveRecipes = inputUnactiveRecipes.filter(x => !tmpActiveRecipes.includes(x));
-                outputActiveRecipes = [...new Set([...inputActiveRecipes], [...tmpActiveRecipes])];
+                outputActiveRecipes = inputActiveRecipes.concat(tmpActiveRecipes);
             }
         }
         else { // Texte inchangé, modification d'un tag
@@ -33,17 +33,17 @@ class Search {
                 let tmpActiveRecipes = Search.tagFilterSearch(inputActiveRecipes, menuName, tmpTagArray);
                 let tmpUnactiveRecipes = inputActiveRecipes.filter(x => !tmpActiveRecipes.includes(x));
                 outputActiveRecipes = [...tmpActiveRecipes];
-                outputUnactiveRecipes = [...new Set([...tmpUnactiveRecipes], [...inputUnactiveRecipes])];
+                outputUnactiveRecipes = tmpUnactiveRecipes.concat(inputUnactiveRecipes);
             } else {
                 if(menuName === '' && addTagName === '') { // Aucun tag n'a changé
-                    let tmpActiveRecipes = [...new Set([...inputActiveRecipes], [...inputUnactiveRecipes])];
+                    let tmpActiveRecipes = inputActiveRecipes.concat(inputUnactiveRecipes);
                     outputActiveRecipes = Search.globalSearch(tmpActiveRecipes, '', listActivTags);
                     outputUnactiveRecipes = tmpActiveRecipes.filter(x => !outputActiveRecipes.includes(x));
                 } else { // Un tag a été retiré
                     // Recherche avec tous les tags restants dans les recettes mises de côté
                     let tmpActiveRecipes = Search.globalSearch(inputUnactiveRecipes, '', listActivTags);
                     outputUnactiveRecipes = inputUnactiveRecipes.filter(x => !tmpActiveRecipes.includes(x));
-                    outputActiveRecipes = [...new Set([...inputActiveRecipes], [...tmpActiveRecipes])];
+                    outputActiveRecipes = inputActiveRecipes.concat(tmpActiveRecipes);
                 }
             }
         }

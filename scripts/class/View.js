@@ -50,12 +50,19 @@ class View {
                 if (errorParagraphe) {
                     errorParagraphe.style.display = 'none';
                 }
+                [this.listActiveRecipes, this.listUnactiveRecipes] = Search.manageGlobalSearch(
+                    divMainSearchInput.value, this.oldSearchText,
+                    false, this.listMenuTagsActive, '', '',
+                    this.listActiveRecipes, this.listUnactiveRecipes);
+            } else {
+                this.listActiveRecipes = [...recipes];
+                this.listUnactiveRecipes = [];
+                [this.listActiveRecipes, this.listUnactiveRecipes] = Search.manageGlobalSearch(
+                    '', '',
+                    false, this.listMenuTagsActive, '', '',
+                    this.listActiveRecipes, this.listUnactiveRecipes);
             }
-
-            [this.listActiveRecipes, this.listUnactiveRecipes] = Search.manageGlobalSearch(
-                divMainSearchInput.value, this.oldSearchText,
-                false, this.listMenuTagsActive, '', '',
-                this.listActiveRecipes, this.listUnactiveRecipes);
+            
             this.updatePage();
             this.oldSearchText = textSearched;
         })
@@ -87,16 +94,18 @@ class View {
         window.addEventListener('addTag', (e) => {
             [this.listActiveRecipes, this.listUnactiveRecipes] = Search.manageGlobalSearch(
                 divMainSearchInput.value, this.oldSearchText,
-                false, this.listMenuTagsActive, e.detail.menuName, e.detail.tagName,
+                true, this.listMenuTagsActive, e.detail.menuName, e.detail.tagName,
                 this.listActiveRecipes, this.listUnactiveRecipes);
             this.updatePage();
         })
 
         /* Remettre les recettes qui ne correspondait pas au filtre supprimé */
         window.addEventListener('deleteTag', (e) => {
-            
+            [this.listActiveRecipes, this.listUnactiveRecipes] = Search.manageGlobalSearch(
+                divMainSearchInput.value, this.oldSearchText,
+                false, this.listMenuTagsActive, e.detail.menuName, e.detail.tagName,
+                this.listActiveRecipes, this.listUnactiveRecipes);
             this.updatePage();
-            console.log(e.detail);
         })
     }
 
