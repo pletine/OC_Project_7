@@ -35,6 +35,10 @@ class View {
         nav.append(this.menuIngredients.filterContent);
         nav.append(this.menuAppareils.filterContent);
         nav.append(this.menuUstensils.filterContent);
+
+        document.querySelector('main').style.left = document.querySelector('header').offsetLeft.toString() + 'px';
+        document.querySelector('main').style.width = document.querySelector('header').offsetWidth.toString() + 'px';
+        document.querySelector('.mainSearchBar button').style.right = '270px';
     }
 
     initEventHandler() {
@@ -77,6 +81,7 @@ class View {
                     errorParagraphe.style.display = 'none';
                 }
             }
+            this.updatePage();
         })
 
         /* Faire une recherche avec les tags des filtres à disposition */
@@ -100,8 +105,15 @@ class View {
         this.menuAppareils.updateHTMLMenu(this.listTagAppareils, true);
         this.menuUstensils.updateHTMLMenu(this.listTagUstensils, true);
 
+        const errorMessage = document.getElementById('errorMainSearch');
         const mainHTMLDiv = document.querySelector('main');
-        mainHTMLDiv.style.top = (320 + document.querySelector('.activeFilters').offsetHeight).toString() + 'px';
+        if(errorMessage) {
+            mainHTMLDiv.style.top = (320 + document.querySelector('.activeFilters').offsetHeight + errorMessage.offsetHeight*2)
+                .toString() + 'px';
+        } else {
+            mainHTMLDiv.style.top = (320 + document.querySelector('.activeFilters').offsetHeight).toString() + 'px';
+        }
+        
     }
 
     /* Mettre à jour la liste des ingrédients, appareils et ustensils possibles

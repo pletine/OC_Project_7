@@ -1,13 +1,17 @@
 /* Recettes filtrées */
 main {
+    position: absolute;
+    left: 100px;
+    top: 320px;
+
     display: flex;
     flex-flow: row wrap;
-    gap: 3%;
-    justify-content: space-around;
+    gap: 7%;
+    justify-content: left;
 }
 
 figure {
-    width: 30%;
+    width: 25em;
     min-width: 340px;
     height: 365px;
     background: #E7E7E7;

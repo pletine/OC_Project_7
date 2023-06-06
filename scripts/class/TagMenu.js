@@ -157,11 +157,6 @@ class TagMenu {
     }
 
     openTagMenu() {
-        /* Fix the position of the main */
-        const mainHTMLDiv = document.querySelector('main');
-        mainHTMLDiv.style.position = 'absolute';
-        mainHTMLDiv.style.top = (320 + document.querySelector('.activeFilters').offsetHeight).toString() + 'px';
-
         /* Modify the search part of the menu */
         let div = this.menuDiv.querySelector('.searchBar');
         this.filterContent.querySelector('.searchBar img').style.transform = 'rotate(180deg)';
