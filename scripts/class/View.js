@@ -2,6 +2,8 @@ class View {
     constructor() {
         // Liste des recettes actives
         this.listActiveRecipes = [...recipes];
+        this.listUnactiveRecipes = [];
+        this.oldSearchText = '';
 
         // Créer les cartes de recettes
         Recipes.createListHTML(recipes, document.querySelector('main'));
@@ -48,12 +50,14 @@ class View {
                 if (errorParagraphe) {
                     errorParagraphe.style.display = 'none';
                 }
-                this.listActiveRecipes = Search.globalSearch(recipes, divMainSearchInput.value, this.listMenuTagsActive);
-                this.updatePage();
-            } else {
-                this.listActiveRecipes = Search.globalSearch(recipes, '', this.listMenuTagsActive);
-                this.updatePage();
             }
+
+            [this.listActiveRecipes, this.listUnactiveRecipes] = Search.manageGlobalSearch(
+                divMainSearchInput.value, this.oldSearchText,
+                false, this.listMenuTagsActive, '', '',
+                this.listActiveRecipes, this.listUnactiveRecipes);
+            this.updatePage();
+            this.oldSearchText = textSearched;
         })
 
         /* Empêcher l'action par défaut du bouton de recherche */
@@ -80,15 +84,19 @@ class View {
         })
 
         /* Faire une recherche avec les tags des filtres à disposition */
-        window.addEventListener('addTag', () => {
-            this.listActiveRecipes = Search.globalSearch(recipes, divMainSearchInput.value, this.listMenuTagsActive);
+        window.addEventListener('addTag', (e) => {
+            [this.listActiveRecipes, this.listUnactiveRecipes] = Search.manageGlobalSearch(
+                divMainSearchInput.value, this.oldSearchText,
+                false, this.listMenuTagsActive, e.detail.menuName, e.detail.tagName,
+                this.listActiveRecipes, this.listUnactiveRecipes);
             this.updatePage();
         })
 
         /* Remettre les recettes qui ne correspondait pas au filtre supprimé */
-        window.addEventListener('deleteTag', () => {
-            this.listActiveRecipes = Search.globalSearch(recipes, divMainSearchInput.value, this.listMenuTagsActive);
+        window.addEventListener('deleteTag', (e) => {
+            
             this.updatePage();
+            console.log(e.detail);
         })
     }
 

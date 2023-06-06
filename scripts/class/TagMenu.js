@@ -135,7 +135,8 @@ class TagMenu {
 
         const changeEvent = new CustomEvent('addTag', {
             detail: {
-                menu: this,
+                menuName: this.name,
+                tagName: nameFilter
             }
         });
         window.dispatchEvent(changeEvent);
@@ -150,7 +151,8 @@ class TagMenu {
 
         const changeEvent = new CustomEvent('deleteTag', {
             detail: {
-                menu: this,
+                menuName: this.name,
+                tagName: findElement.innerText
             }
         });
         window.dispatchEvent(changeEvent);
