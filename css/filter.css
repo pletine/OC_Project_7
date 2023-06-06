@@ -44,7 +44,7 @@ div[id $= 'filter'] {
     border: transparent;
     margin: 1em;
     padding: 10px 20px;
-    width: 15%;
+    width: 170px;
     height: 60px;
 
     z-index: 10;
@@ -86,5 +86,3 @@ div[id $= 'filter'] li::first-letter {
 div[id $= 'filter'] li {
     margin: 0 15px;
 }
-
-

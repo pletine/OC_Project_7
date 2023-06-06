@@ -51,7 +51,7 @@ class View {
                 this.listActiveRecipes = Search.globalSearch(recipes, divMainSearchInput.value, this.listMenuTagsActive);
                 this.updatePage();
             } else {
-                this.listActiveRecipes = [...recipes];
+                this.listActiveRecipes = Search.globalSearch(recipes, '', this.listMenuTagsActive);
                 this.updatePage();
             }
         })
@@ -99,6 +99,9 @@ class View {
         this.menuIngredients.updateHTMLMenu(this.listTagIngredients, true);
         this.menuAppareils.updateHTMLMenu(this.listTagAppareils, true);
         this.menuUstensils.updateHTMLMenu(this.listTagUstensils, true);
+
+        const mainHTMLDiv = document.querySelector('main');
+        mainHTMLDiv.style.top = (320 + document.querySelector('.activeFilters').offsetHeight).toString() + 'px';
     }
 
     /* Mettre à jour la liste des ingrédients, appareils et ustensils possibles

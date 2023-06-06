@@ -147,7 +147,7 @@ class TagMenu {
 
         this.activeFilters.splice(indexElement, 1);
         divActiveFilter.remove();
-        
+
         const changeEvent = new CustomEvent('deleteTag', {
             detail: {
                 menu: this,
@@ -158,9 +158,9 @@ class TagMenu {
 
     openTagMenu() {
         /* Fix the position of the main */
-        let mainHTMLDiv = document.querySelector('main');
+        const mainHTMLDiv = document.querySelector('main');
         mainHTMLDiv.style.position = 'absolute';
-        mainHTMLDiv.style.top = mainHTMLDiv.offsetTop.toString() + 'px';
+        mainHTMLDiv.style.top = (320 + document.querySelector('.activeFilters').offsetHeight).toString() + 'px';
 
         /* Modify the search part of the menu */
         let div = this.menuDiv.querySelector('.searchBar');
@@ -177,12 +177,6 @@ class TagMenu {
     }
 
     closeTagMenu() {
-        /* Give again the position of the main part */
-        let mainHTMLDiv = document.querySelector('main');
-        mainHTMLDiv.style.position = 'unset';
-        mainHTMLDiv.style.top = 'none';
-
-
         const div = this.menuDiv.querySelector('.searchBar');
         this.filterContent.querySelector('.searchBar img').style.transform = 'rotate(0deg)';
         div.childNodes[0].style.display = 'block';
@@ -190,8 +184,9 @@ class TagMenu {
         div.querySelector('input').value = '';
         this.updateHTMLMenu(this.listFilters, false);
         this.status = false;
+
         this.filterContent.querySelector('ol').style.display = 'none';
         this.filterContent.style.height = '60px';
-        this.filterContent.style.width = '15%';
+        this.filterContent.style.width = '170px';
     }
 }

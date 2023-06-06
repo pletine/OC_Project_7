@@ -8,6 +8,10 @@ class Search {
     }
 
     static mainInputSearch(textSearchValue, listRecipes) {
+        if(textSearchValue === '') {
+            return listRecipes;
+        }
+
         let filteredArray = [];
         for (let i = 0; i < listRecipes.length; i++) {
             if (listRecipes[i].name.toLowerCase().includes(textSearchValue.toLowerCase())
