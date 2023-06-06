@@ -2,11 +2,13 @@
 main {
     display: flex;
     flex-flow: row wrap;
-    gap: 10px;
+    gap: 3%;
+    justify-content: space-around;
 }
 
 figure {
-    width: 380px;
+    width: 30%;
+    min-width: 340px;
     height: 365px;
     background: #E7E7E7;
     border-radius: 5px;
